@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IslandWave</title>
+<link rel="icon" href="/assets/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+<header class="bg-white border-b">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/index.html" class="flex items-center gap-3">
+      <img src="/assets/logo.png" alt="IslandWave" class="h-10 w-auto">
+      <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">IslandWave</span>
+    </a>
+    <nav class="flex gap-4 text-slate-700">
+      <a href="/live.html" class="hover:text-blue-600">Live</a>
+      <a href="/plans.html" class="hover:text-blue-600">Plans</a>
+      <a href="/beat-your-bill.html" class="hover:text-blue-600">Beat Your Bill</a>
+      <a href="/community.html" class="hover:text-blue-600">Community</a>
+      <a href="/marketplace.html" class="hover:text-blue-600">Marketplace</a>
+      <a href="/legal.html" class="hover:text-blue-600">Legal</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-4">Marketplace</h1>
+  <div class="bg-white rounded-2xl border shadow p-5 mb-4">
+    <div class="grid md:grid-cols-2 gap-3">
+      <input id="title" class="w-full p-2 border rounded" placeholder="Title">
+      <input id="price" class="w-full p-2 border rounded" placeholder="Price (CAD)">
+      <input id="email" class="w-full p-2 border rounded md:col-span-2" placeholder="Contact email">
+      <textarea id="desc" class="w-full p-2 border rounded md:col-span-2" rows="3" placeholder="Description"></textarea>
+      <input id="image" type="file" accept="image/*" class="w-full md:col-span-2">
+    </div>
+    <button onclick="addItem()" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded">Post Listing</button>
+  </div>
+  <div id="grid" class="grid md:grid-cols-3 gap-4"></div>
+</main>
+
+<footer class="mt-12 border-t">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-6 text-sm text-slate-700">
+    <div>
+      <div class="font-bold">IslandWave</div>
+      <div>Canada-wide • Vancouver Island roots</div>
+    </div>
+    <div>
+      <div class="font-semibold mb-2">Legal</div>
+      <ul class="space-y-1">
+        <li><a href="/legal.html#terms" class="underline">Terms</a></li>
+        <li><a href="/legal.html#privacy" class="underline">Privacy</a></li>
+        <li><a href="/legal.html#aup" class="underline">Acceptable Use</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-semibold mb-2">Explore</div>
+      <ul class="space-y-1">
+        <li><a href="/plans.html" class="underline">Plans</a></li>
+        <li><a href="/marketplace.html" class="underline">Marketplace</a></li>
+        <li><a href="/community.html" class="underline">Community</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 pb-6 text-slate-500">© 2025 IslandWave</div>
+</footer>
+
+<script>
+  function load(){
+    const items=JSON.parse(localStorage.getItem('iw_market')||'[]');
+    const g=document.getElementById('grid');
+    g.innerHTML='';
+    items.forEach(it=>{
+      g.insertAdjacentHTML('beforeend',`
+        <div class='bg-white rounded-2xl border shadow p-5'>
+          ${it.image?`<img src='${it.image}' alt='${it.title}' class='w-full h-40 object-cover rounded-xl mb-2'/>`:''}
+          <div class='font-bold text-lg'>${it.title}</div>
+          <div class='text-slate-700'>${it.price}</div>
+          <div class='text-slate-700 text-sm mt-1'>${it.desc}</div>
+          ${it.email?`<a class='inline-block mt-2 px-3 py-2 border rounded' href='mailto:${it.email}?subject=Marketplace: ${encodeURIComponent(it.title)}'>Contact Seller</a>`:''}
+        </div>`);
+    });
+  }
+  function toBase64(f){return new Promise((res,rej)=>{const r=new FileReader(); r.onload=()=>res(String(r.result)); r.onerror=rej; r.readAsDataURL(f);})}
+  async function addItem(){
+    const title=document.getElementById('title').value.trim(); if(!title) return;
+    const price=document.getElementById('price').value;
+    const email=document.getElementById('email').value;
+    const desc=document.getElementById('desc').value;
+    const file=document.getElementById('image').files[0]; let image=''; if(file) image=await toBase64(file);
+    const it={id:Date.now(), title, price, email, desc, image};
+    const items=[it,...JSON.parse(localStorage.getItem('iw_market')||'[]')];
+    localStorage.setItem('iw_market', JSON.stringify(items));
+    document.getElementById('title').value=''; document.getElementById('price').value='';
+    document.getElementById('email').value=''; document.getElementById('desc').value=''; document.getElementById('image').value='';
+    load();
+  }
+  load();
+</script>
+</body>
+</html>
