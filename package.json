@@ -1,8 +1,8 @@
 {
   "name": "islandwave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
-  "engines": { "node": "18.x" },
+  "engines": { "node": "22.x" },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
