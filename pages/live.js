@@ -1,0 +1,2 @@
+import Layout from '../components/Layout'
+export default function Live(){ return (<Layout><h1 className='text-3xl font-bold mb-4'>Live Stream</h1><div className='card'><div className='relative pb-[56.25%] h-0 overflow-hidden rounded-xl'><iframe className='absolute inset-0 w-full h-full' src='https://www.youtube.com/embed/live_stream?channel=@Islandwavenet' title='IslandWave Live' allowFullScreen/></div></div></Layout>) }
